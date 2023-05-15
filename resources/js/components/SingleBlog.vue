@@ -7,7 +7,7 @@
             <span class="date">{{ formatDate(post.created_at) }}</span>
         </div>
         <div class="thumbnail">
-            <img src="https://placehold.co/600x400" />
+            <img :src="'http://127.0.0.1:8000/storage/' + post.image" />
         </div>
         <p class="post-content">{{ post.content }}</p>
 

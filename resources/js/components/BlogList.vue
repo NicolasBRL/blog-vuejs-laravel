@@ -6,7 +6,7 @@
                     <router-link
                         :to="{ name: 'post', params: { id: post.id } }"
                     >
-                        <img src="https://placehold.co/600x400" />
+                        <img :src="'http://127.0.0.1:8000/storage/' + post.image" />
                     </router-link>
                 </div>
                 <div class="card-body">
