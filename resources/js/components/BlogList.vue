@@ -1,7 +1,7 @@
 <template>
     <div class="post-container">
-        <div class="grid grid-cols-3	gap-4">
-            <div v-for="post in posts.data" :key="post.id" class="card">
+        <div class="grid grid-cols-3 gap-4">
+            <div v-for="post in posts.data" :key="post.id" class="card flex flex-col">
                 <div class="thumbnail">
                     <router-link
                         :to="{ name: 'post', params: { id: post.id } }"
@@ -9,7 +9,7 @@
                         <img :src="'http://127.0.0.1:8000/storage/' + post.image" />
                     </router-link>
                 </div>
-                <div class="card-body">
+                <div class="card-body flex flex-col flex-1">
                     <div class="post-meta">
                         <span class="tags">{{ post.tags }}</span>
                         -
@@ -17,10 +17,14 @@
                             formatDate(post.created_at)
                         }}</span>
                     </div>
-                    <p class="content">
-                        {{ truncate(post.content, 70, "...") }}
+                    <router-link :to="{ name: 'post', params: { id: post.id } }">
+                        <h2 class="titre uppercase text-lg mb-2">{{ post.titre }}</h2>
+                    </router-link>
+                    <p class="content flex-1">
+                        {{ truncate(post.content, 150, "...") }}
                     </p>
-                    <span
+                    
+                    <span class="mt-2"
                         >{{ post.comments.length }} Commentaire{{
                             post.comments.length ? "s" : ""
                         }}</span
@@ -124,14 +128,18 @@ export default {
 
 
 .card .thumbnail {
-    flex: 0 0 100% !important;
-    margin-bottom: 24px;
+    margin-bottom: 12px;
 }
 
 .card .thumbnail img {
     border-radius: 7px;
     max-width: 100%;
     height: auto;
+}
+
+.card .titre {
+    color: #222;
+    font-weight: 600;
 }
 
 .card .post-meta {

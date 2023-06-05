@@ -6,12 +6,13 @@
             -
             <span class="date">{{ formatDate(post.created_at) }}</span>
         </div>
+        <h1 class="uppercase text-xl mb-2 text-black font-bold">{{ post.titre }}</h1>
         <div class="thumbnail">
             <img :src="'http://127.0.0.1:8000/storage/' + post.image" />
         </div>
-        <p class="post-content">{{ post.content }}</p>
+        <p class="post-content my-8" v-html="post.content"></p>
 
-        <hr style="width: 50%;margin 0 auto" />
+        <hr class="hr" />
 
         <div class="comment-container">
             <div v-for="comment in post.comments" :key="comment.id">
@@ -71,7 +72,7 @@ export default {
     color: #888;
 }
 .container {
-    width: 66.66667%;
+    width: 60%;
     margin: 0 auto;
 }
 .post-meta {
@@ -87,9 +88,13 @@ export default {
     height: auto;
 }
 
-.post-content {
+.post-content *{
     text-align: justify;
     color: #222;
+}
+
+.post-content p{
+    margin-bottom: 5px;
 }
 
 .comment-container {
@@ -98,4 +103,6 @@ export default {
 .comment-content {
     text-align: justify;
 }
+
+.hr{width: 50%; margin: 0 auto;}
 </style>
