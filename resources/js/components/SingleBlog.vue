@@ -1,6 +1,6 @@
 <template>
-    <router-link to="/" class="back-btn">« Retour</router-link>
-    <div class="container">
+    <div class="container py-4">
+        <router-link to="/" class="back-btn mb-4">« Retour</router-link>
         <div class="post-meta">
             <span class="tags">{{ post.tags }}</span>
             -
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import apiClient from '../api';
 import { useRoute } from "vue-router";
 export default {
     name: "SingleBlog",
@@ -43,8 +43,8 @@ export default {
         // Get post informations from api
         getPost: function (components) {
             const route = useRoute();
-            axios
-                .get("http://127.0.0.1:8000/api/posts/" + route.params.id)
+            apiClient
+                .get("/posts/" + route.params.id)
                 .then((resp) => {
                     console.log(resp.data.data);
                     components.post = resp.data.data;

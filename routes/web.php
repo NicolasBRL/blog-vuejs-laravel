@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,11 +13,7 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
-Route::get('/', function () {
+Route::get('{any}', function () {
     return view('welcome');
-});
-Route::get('/blog/{post}', function () {
-    return view('welcome');
-});
+})->where('any', '.*');
 
