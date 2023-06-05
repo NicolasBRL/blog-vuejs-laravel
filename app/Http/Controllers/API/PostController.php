@@ -12,7 +12,7 @@ class PostController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
+    {  
         $posts = Post::all();
 
         return response()->json([
@@ -78,6 +78,18 @@ class PostController extends Controller
         $post->delete();
         return response()->json([
             'data' => 'Post deleted'
+        ]);
+    }
+
+    /**
+     * Récupère les articles par pages
+     */
+    public function getArticles(Request $request)
+    {
+        $posts = Post::paginate($request->get('per_page', 10));
+
+        return response()->json([
+            'data' => $posts,
         ]);
     }
 }

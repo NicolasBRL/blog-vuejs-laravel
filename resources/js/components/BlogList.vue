@@ -1,7 +1,7 @@
 <template>
     <div class="post-container">
-        <div class="card-container">
-            <div v-for="post in posts" :key="post.id" class="card">
+        <div class="grid grid-cols-3	gap-4">
+            <div v-for="post in posts.data" :key="post.id" class="card">
                 <div class="thumbnail">
                     <router-link
                         :to="{ name: 'post', params: { id: post.id } }"
@@ -28,6 +28,21 @@
                 </div>
             </div>
         </div>
+
+
+        <!-- Boutons de pagination -->
+        <div class="buttons-container mt-4">
+            <nav>
+                <ul class="inline-flex -space-x-px">
+                    <li>
+                        <a class="px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 cursor-pointer" @click="previousPage">Précédent</a>
+                    </li>
+                    <li>
+                        <a class="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 cursor-pointer" @click="nextPage">Suivant</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </div>
 </template>
 
@@ -39,17 +54,25 @@ export default {
     data() {
         return {
             posts: [],
+            currentPage: 1
         };
     },
     methods: {
         // Get all posts from api
-        getAllPosts: function (components) {
-            axios
-                .get("http://127.0.0.1:8000/api/posts")
-                .then((resp) => {
-                    components.posts = resp.data.data;
-                })
-                .catch((components.error = true));
+        getAllPosts: function (components) { 
+            axios.get('http://127.0.0.1:8000/api/articles', {
+                params: {
+                    page: this.currentPage, // Récupérer la page actuelle
+                    per_page: 6 // Définir le nombre d'articles par page
+                }
+            })
+            .then(response => {
+                console.log(response.data)
+                this.posts = response.data.data; // Stocker les articles dans la variable du composant
+            })
+            .catch(error => {
+                console.error(error);
+            });
         },
 
         // Truncate text
@@ -71,6 +94,21 @@ export default {
                 dateStyle: "long",
             }).format(date);
         },
+
+        // Méthode pour passer à la page précédente
+        previousPage() {
+            if (this.currentPage > 1) {
+                this.currentPage--;
+                this.getAllPosts();
+            }
+        },
+        // Méthode pour passer à la page suivante
+        nextPage() {
+            if (this.currentPage < this.posts.last_page) {
+                this.currentPage++;
+                this.getAllPosts();
+            }
+        }
     },
     created: function () {
         this.getAllPosts(this);
@@ -84,28 +122,6 @@ export default {
     margin: 0 auto;
 }
 
-.card-container {
-    display: flex;
-    flex-wrap: wrap;
-    margin-top: calc(3rem * -1);
-    margin-right: calc(3rem / -2);
-    margin-left: calc(3rem / -2);
-}
-
-.card-container > * {
-    flex-shrink: 0;
-    width: 100%;
-    max-width: 100%;
-    padding-right: calc(3rem / 2);
-    padding-left: calc(3rem / 2);
-    margin-top: 3rem;
-}
-
-.card {
-    flex: 0 0 auto;
-    width: 33.33333%;
-    position: relative;
-}
 
 .card .thumbnail {
     flex: 0 0 100% !important;
