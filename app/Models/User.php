@@ -29,6 +29,8 @@ class User extends Authenticatable
         'image' => '/uploads/users/default-avatar.png'
     ];
 
+    protected $appends = ['isAdmin'];
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -63,7 +65,7 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
-    public function isAdmin()
+    public function getIsAdminAttribute()
     {
         return $this->role_id == 2;
     }

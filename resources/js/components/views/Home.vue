@@ -3,7 +3,7 @@
         <div class="grid grid-cols-3 gap-4">
             <div v-for="post in posts.data" :key="post.id" class="card flex flex-col">
                 <div class="thumbnail relative">
-                    <div class="absolute top-2 right-2 z-100 hidden" v-if="isAuthenticated && currentUser.id === post.user.id">
+                    <div class="absolute top-2 right-2 z-100 hidden" v-if="isAuthenticated && (currentUser.id === post.user.id || currentUser.isAdmin)">
                         <div class="flex gap-2">
                             <router-link :to="{ name: 'edit-post', params: { id: post.id } }" class="rounded-full bg-white bg-opacity-50 p-2 hover:bg-opacity-100 cursor-pointer">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">

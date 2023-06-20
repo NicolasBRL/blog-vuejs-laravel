@@ -26,11 +26,13 @@ const routes = [
         name: "login",
         path: "/login",
         component: Login,
+        meta: {requiresNotAuth: true}
     },
     {
         name: "register",
         path: "/register",
         component: Register,
+        meta: {requiresNotAuth: true}
     },
     {
         path: "/blog/:id",
@@ -56,6 +58,8 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
     if (to.meta.requiresAuth && !store.getters.isAuthenticated) {
       next('/login')
+    }else if (to.meta.requiresNotAuth && store.getters.isAuthenticated) {
+        next('/')
     } else {
       next()
     }

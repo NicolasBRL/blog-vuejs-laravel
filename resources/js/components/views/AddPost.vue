@@ -28,7 +28,7 @@
 
             <div class="mb-6">
                 <label class="block mb-2 text-sm font-medium text-gray-900" for="image">Image</label>
-                <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none" id="image" ref="fileInput" @change="handleFileInputChange" type="file">
+                <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none" id="image" @change="handleFileInputChange" type="file">
             </div>
 
             <button @click="handleSubmitForm" type="submit"
