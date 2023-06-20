@@ -3,27 +3,32 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StorePostRequest;
+use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
+use Illuminate\Contracts\Cache\Store;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {  
-        $posts = Post::all();
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum')->only(['store', 'update', 'destroy']);
+    }
+
+    public function index(Request $request)
+    {
+        $posts = Post::orderBy('id', 'DESC')->paginate($request->get('per_page', 10));
 
         return response()->json([
-            'data' => $posts
+            'success' => true,
+            'posts' => $posts,
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(StorePostRequest $request)
     {
         // Upload image here
         if($request->has('image')){
@@ -32,7 +37,7 @@ class PostController extends Controller
 
                 $extension = $request->image->getClientOriginalExtension();
 
-                $fileName = $filenameWithoutExt . '_' . time() . '.' . $extension;
+                $fileName = Str::slug($filenameWithoutExt) . '_' . time() . '.' . $extension;
 
                 $request->image->storeAs('public/uploads', $fileName);
         }
@@ -44,52 +49,62 @@ class PostController extends Controller
         );
 
         return response()->json([
-            'data' => $post
+            'success' => true,
+            'message' => 'Article créer avec succès',
+            'post' => $post
         ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Post $post)
     {
         return response()->json([
-            'data' => $post
+            'success' => true,
+            'post' => $post
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Post $post)
+    public function update(UpdatePostRequest $request, Post $post)
     {
-        $post->update($request->all());
+        // Upload image here
+        if($request->has('image')){
+            $filenameWithExt = $request->image->getClientOriginalName();
+            $filenameWithoutExt = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+
+                $extension = $request->image->getClientOriginalExtension();
+
+                $fileName = Str::slug($filenameWithoutExt) . '_' . time() . '.' . $extension;
+
+                $request->image->storeAs('public/uploads', $fileName);
+            
+            // Delete old image
+            if(Storage::exists('public/' . $post->image)){
+                Storage::delete('public/' . $post->image);
+            }
+        }
+
+        $post->update(array_merge(
+            $request->all(),
+            ['image' => $request->has('image') ? "uploads/$fileName" : $post->image]
+        ));
 
         return response()->json([
-            'data' => $post
+            'status' => true,
+            'message' => 'Article modifié avec succès',
+            'post' => $post,
         ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Post $post)
     {
+        // Delete post image
+        if(Storage::exists('public/' . $post->image)){
+            Storage::delete('public/' . $post->image);
+        }
+        
         $post->delete();
         return response()->json([
-            'data' => 'Post deleted'
-        ]);
-    }
-
-    /**
-     * Récupère les articles par pages
-     */
-    public function getArticles(Request $request)
-    {
-        $posts = Post::paginate($request->get('per_page', 10));
-
-        return response()->json([
-            'data' => $posts,
+            'success' => true,
+            'message' => 'Article supprimer avec succès'
         ]);
     }
 }
