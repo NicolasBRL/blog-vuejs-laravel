@@ -4,6 +4,7 @@ import store from './store/index'
 // Views
 import Home from "./components/views/Home.vue";
 import Login from './components/views/Login.vue'
+import Register from './components/views/Register.vue'
 import SingleBlog from './components/views/SingleBlog.vue'
 import AddPost from './components/views/AddPost.vue'
 import EditPost from './components/views/EditPost.vue'
@@ -25,6 +26,11 @@ const routes = [
         name: "login",
         path: "/login",
         component: Login,
+    },
+    {
+        name: "register",
+        path: "/register",
+        component: Register,
     },
     {
         path: "/blog/:id",

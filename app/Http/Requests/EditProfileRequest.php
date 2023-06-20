@@ -26,7 +26,7 @@ class EditProfileRequest extends FormRequest
     {
         return [
             'id' => 'required',
-            'pseudo' => 'string|max:255',
+            'pseudo' => 'string|max:255|unique:users,pseudo' . $this->id,
             'email' => 'email|unique:users,email,' . $this->id,
             'image' => 'image|max:1024',
             'password' => [

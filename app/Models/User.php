@@ -25,6 +25,10 @@ class User extends Authenticatable
         'role_id'
     ];
 
+    protected $attributes = [
+        'image' => '/uploads/users/default-avatar.png'
+    ];
+
     /**
      * The attributes that should be hidden for serialization.
      *

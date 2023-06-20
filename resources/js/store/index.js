@@ -38,6 +38,7 @@ const store = createStore({
 
         logout({ commit }) {
             commit('LOGOUT')
+            router.push({ name: 'login'}) // Redirige sur la page de connexion
         }
     },
     getters: {

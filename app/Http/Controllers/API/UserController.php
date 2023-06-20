@@ -4,67 +4,31 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EditProfileRequest;
+use App\Http\Requests\StoreUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
 
     /**
-     * Show the form for creating a new resource.
+     * Register a new user
      */
-    public function create()
+    public function store(StoreUserRequest $request)
     {
-        //
-    }
+        $user = User::create(array_merge(
+            $request->all(), 
+            ['password' => Hash::make($request->password)]
+        ));
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(User $user)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(User $user)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, User $user)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(User $user)
-    {
-        //
+        return response()->json([
+            'success' => true,
+            'message' => 'Votre compte à été créer avec succès',
+            'user' => $user,
+        ]);
     }
 
     /**
@@ -93,15 +57,16 @@ class UserController extends Controller
 
         $user->update(array_merge(
             $request->all(),
-            ['image' => $request->has('image') ? "uploads/users/".$fileName : $user->image]
+            [
+                'image' => $request->has('image') ? "uploads/users/".$fileName : $user->image, 
+                'password' => $request->has('password') ? Hash::make($request->password) : $user->password
+            ]
         ));
 
         return response()->json([
-            'status' => true,
+            'success' => true,
             'message' => 'Profil modifié avec succès',
             'user' => $user,
-            'debug' => $request->all(),
-            'debug4' => $request->has('image') ? "uploads/users/".$fileName : $user->image,
         ]);
     }
 }

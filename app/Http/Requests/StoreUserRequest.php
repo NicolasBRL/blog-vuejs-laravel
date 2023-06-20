@@ -25,8 +25,8 @@ class StoreUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'pseudo' => 'required|string|max:255',
-            'email' => 'required|email:rfc,dns|unique:users,email',
+            'pseudo' => 'required|string|max:255|unique:users,pseudo' . $this->id,
+            'email' => 'required|email|unique:users,email',
             'password' => [
                 'required',
                 Password::min(8)

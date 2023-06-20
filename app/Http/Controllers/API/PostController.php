@@ -88,7 +88,7 @@ class PostController extends Controller
         ));
 
         return response()->json([
-            'status' => true,
+            'success' => true,
             'message' => 'Article modifié avec succès',
             'post' => $post,
         ]);
